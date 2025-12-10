@@ -7,13 +7,13 @@ export default function Hero() {
       >
         ABDELHAMED<br />MOHAMED
       </h1>
-      <p className="text-base text-zinc-400 sm:text-lg md:text-xl lg:text-2xl">
+      <p className="text-base text-white/60 sm:text-lg md:text-xl lg:text-2xl">
         Software Engineer · Founder @{" "}
         <a 
           href="https://oblien.com" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="text-white transition-colors hover:text-zinc-300"
+          className="text-white transition-colors hover:text-white/80"
         >
           Oblien
         </a>
