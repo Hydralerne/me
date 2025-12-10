@@ -26,16 +26,19 @@ function Toast({ message, isVisible, onClose }: {
   );
 }
 
-export default function ChatInput() {
+export default function ChatInput({ onSubmit }: { onSubmit?: (message: string) => void }) {
   const [message, setMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (message.trim()) {
-      // Handle message submission here
-      console.log("Message:", message);
+      if (onSubmit) {
+        onSubmit(message.trim());
+      }
       setMessage("");
+      setIsFocused(false);
     }
   };
 
@@ -45,49 +48,55 @@ export default function ChatInput() {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="w-full max-w-3xl">
-        <div className="group relative flex items-center rounded-full border border-white/10 bg-black/30 backdrop-blur-sm transition-all duration-300 hover:border-white/20 focus-within:border-white/30">
-          <button
-            type="button"
-            className="flex h-14 w-14 items-center justify-center text-white/50 transition-colors hover:text-white/80"
-            aria-label="Add attachment"
-          >
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-          </button>
-          
-          <input
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Ask anything"
+    <form onSubmit={handleSubmit} className="w-full px-4">
+        <div 
+          className={`group relative flex items-center rounded-full border border-white/10 bg-black/30 backdrop-blur-sm transition-all duration-500 ease-out hover:border-white/20 focus-within:border-white/30 mx-auto ${
+            isFocused ? 'max-w-4xl' : 'w-full sm:max-w-md md:max-w-lg lg:max-w-xl'
+          }`}
+        >
+        <button
+          type="button"
+            className="flex h-14 w-14 items-center justify-center text-white/50 transition-colors hover:text-white/80 flex-shrink-0"
+          aria-label="Add attachment"
+        >
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+        </button>
+        
+        <input
+          type="text"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => !message.trim() && setIsFocused(false)}
+          placeholder="Ask anything"
             className="flex-1 bg-transparent py-4 pr-4 text-sm text-white placeholder-white/30 outline-none sm:text-base"
-          />
-          
-          <button
-            type="button"
+        />
+        
+        <button
+          type="button"
             onClick={handleVoiceClick}
-            className="mr-2 flex h-10 w-10 items-center justify-center text-white/50 transition-colors hover:text-white/80"
-            aria-label="Voice input"
-          >
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-            </svg>
-          </button>
-          
-          <button
-            type="submit"
-            disabled={!message.trim()}
-            className="mr-2 flex h-10 w-10 items-center justify-center rounded-full bg-white text-black transition-all hover:bg-white/90 active:scale-95 disabled:opacity-30 disabled:hover:bg-white"
-            aria-label="Send message"
-          >
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
-          </button>
-        </div>
-      </form>
+            className="mr-2 flex h-10 w-10 items-center justify-center text-white/50 transition-colors hover:text-white/80 flex-shrink-0"
+          aria-label="Voice input"
+        >
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+          </svg>
+        </button>
+        
+        <button
+          type="submit"
+          disabled={!message.trim()}
+            className="mr-2 flex h-10 w-10 items-center justify-center rounded-full bg-white text-black transition-all hover:bg-white/90 active:scale-95 disabled:opacity-30 disabled:hover:bg-white flex-shrink-0"
+          aria-label="Send message"
+        >
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </button>
+      </div>
+    </form>
 
       <Toast
         message="🎤 Voice input coming soon!"
