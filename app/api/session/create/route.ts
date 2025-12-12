@@ -1,10 +1,11 @@
-import { NextResponse } from 'next/server';
 import { 
   OblienClient, 
   OblienChat, 
   GuestManager, 
   NodeCacheStorage 
 } from 'oblien';
+
+import { NextResponse } from 'next/server';
 
 // Initialize Oblien client
 // TODO: Add these to your .env.local file:
@@ -38,9 +39,7 @@ export async function POST(request: Request) {
     }
 
     // Get client IP address
-    const forwarded = request.headers.get('x-forwarded-for');
-    const ip = forwarded ? forwarded.split(',')[0].trim() : '127.0.0.1';
-
+    const ip = request.headers.get('x-real-ip') || request.headers.get('x-forwarded-for') || '';
     // Get agent ID from environment
     const agentId = process.env.OBLIEN_AGENT_ID || '';
 
